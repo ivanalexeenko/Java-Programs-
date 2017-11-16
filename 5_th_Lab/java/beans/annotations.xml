@@ -1,0 +1,5 @@
+<root>
+    <item name='java.beans.ConstructorProperties'>
+        <annotation name='java.lang.Deprecated'/>
+    </item>
+</root>
