@@ -205,9 +205,9 @@ public class GraphicalPanel extends JPanel {
 
 
             ApplicationListener submitButtonAction = new ApplicationListener();
-            ApplicationListener pleaseWork = new ApplicationListener();
+
             submitButton.addActionListener(submitButtonAction);
-            firstElementInput.addActionListener(pleaseWork);
+
 
 
 
@@ -218,6 +218,7 @@ public class GraphicalPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            
             firstElement = Double.valueOf(0);
             amount = Integer.valueOf(0);
             coefficient = Double.valueOf(0);
@@ -225,6 +226,7 @@ public class GraphicalPanel extends JPanel {
             try {
                 firstElementInput.setEditable(true);
                 firstElementInput.setEnabled(true);
+
                 firstElement = Double.parseDouble(firstElementInput.getText());
                 System.out.println("????");
                 amount = Integer.parseInt(amountInput.getText());
