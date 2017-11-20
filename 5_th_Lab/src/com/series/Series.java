@@ -7,10 +7,22 @@ import java.io.IOException;
 abstract public class Series {
     private int amount;
 
-    public abstract double calculate(int index);
-    public double sum(int index) {
-        this.amount = index;
+    public abstract double calculate(int index) throws MyException;
+    public double sum(int index) throws MyException {
+        try {
+            this.amount = index;
+            if(index < 0) {
+                throw new MyException("Wrong index,index should be a positive number.");
+            }
+        }
+        catch (MyException e) {
+            System.out.println(e.getMessage());
+        }
+
         double sum = 0;
+        if(index == 0) {
+            return sum;
+        }
         for(int i = 1;i <= this.amount;i++) {
             sum += calculate(i);
         }
@@ -19,7 +31,11 @@ abstract public class Series {
     public String toString() {
         StringBuffer stringBuffer = new StringBuffer();
         for(int i = 1;i <= this.amount;i++) {
-            stringBuffer.append(calculate(i));
+            try {
+                stringBuffer.append(calculate(i));
+            } catch (MyException e) {
+                System.out.println(e.getMessage());
+            }
             stringBuffer.append(" ");
         }
         return stringBuffer.toString();
@@ -49,5 +65,6 @@ abstract public class Series {
         }
 
     }
+
 
 }
