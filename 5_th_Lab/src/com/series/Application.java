@@ -1,14 +1,8 @@
 package com.series;
-
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 public class Application extends JFrame {
@@ -25,13 +19,10 @@ public class Application extends JFrame {
     public static final int BIG_BUTTON_WIDTH = 300;
     public static final int BIG_BUTTON_HEIGHT = 50;
 
-
     public static String DEFAULT_CAPTION = "LALALALALA Series LALALALALA";
     public static final String FONT_STYLE = "Bernard MT Condensed";
-    public static final String SERIES_TYPE = "Choose a type of Series:";
     public static final String LINER_TYPE = "Liner";
     public static final String EXPONENTIAL_TYPE = "Exponential";
-    public static final String BACKGROUND_IMAGE = "background.jpg";
     public static final String FIRST_ELEMENT_TEXT = "First element:";
     public static final String COEFFICIENT_TEXT = "Coefficient:";
     public static final String AMOUNT_TEXT = "Amount:";
@@ -39,6 +30,10 @@ public class Application extends JFrame {
     public static final String SUBMIT_TEXT = "Submit";
     public static final String MESSAGE_BOX_TEXT = "Wrong input,data will be replaced by default.";
     public static final String MESSAGE_BOX_SOFT_TEXT = "Series type is not chosen, Liner is default.";
+    public static final String MESSAGE_BOX_AMOUNT_TEXT = "Amount of elements should be more than zero.";
+    public static final String ICON_IMAGE = "apple.png";
+    public static final String BACKGROUND_IMAGE = "background.jpg";
+    public static final String SERIES_TYPE = "Choose a type of Series:";
     public static final String EXAMPLE_FILENAME = "output.txt";
     // Buttons and others
     private JRadioButton linerRadioButton;
@@ -51,7 +46,7 @@ public class Application extends JFrame {
     private JTextField amountInput;
     private JTextField fileToSaveTextField;
     private JTextField fileToSaveInput;
-    private JTextField showSeries;
+    private JTextArea showSeries;
     private JButton submitButton;
     private JPanel panel;
 
@@ -62,212 +57,217 @@ public class Application extends JFrame {
     private Double coefficient;
     private String filename;
     private String outputText;
-    private int sum;
+    private double sum;
 
-    Application() {
-        super();
-        setTitle(DEFAULT_CAPTION);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // Screen Size
+    private void setScreenBounds() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
         int x = (screenSize.width / 2) - (DEFAULT_WIDTH / 2);
         int y = (screenSize.height / 2) - (DEFAULT_HEIGHT / 2);
         setBounds(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        //Characteristics
-        setVisible(true);
-        setResizable(false);
-        //Set BackGround
-        panel = new JPanel();
-        this.add(panel);
 
-        GridBagLayout gridBagLayout = new GridBagLayout();
+    }
+    private void setRadioButtonParameters(JRadioButton button,boolean isOpaque,boolean isEnabled,Color foregroundColor,Font font) {
+        button.setOpaque(isOpaque);
+        button.setEnabled(isEnabled);
+        button.setForeground(foregroundColor);
+        button.setFont(font);
+    }
+    private void addRadioButtonToPanel(JRadioButton button,JPanel panel,GridBagConstraints constraints,double weightx,int gridx,int gridy) {
+        constraints.gridx = gridx;
+        constraints.gridy = gridy;
+        constraints.weightx = weightx;
+        panel.add(button,constraints);
+    }
+    private void setTextFieldParameters(JTextField textField,boolean isEnabled,boolean isOpaque,Font font) {
+        textField.setEnabled(isEnabled);
+        textField.setOpaque(isOpaque);
+        textField.setFont(font);
+    }
+    private void addTextFieldToPanel(JTextField textField,JPanel panel,GridBagConstraints constraints,double weightx,int gridx,int gridy) {
+        constraints.weightx = weightx;
+        constraints.gridx = gridx;
+        constraints.gridy = gridy;
+        panel.add(textField,constraints);
+    }
+    private void addButtonToPanel(JButton button, JPanel panel,GridBagConstraints constraints,int gridx,int gridy,Font font) {
+        button.setFont(font);
+        constraints.gridx = gridx;
+        constraints.gridy = gridy;
+        panel.add(button,constraints);
 
-        setLayout(gridBagLayout);
+    }
+    private void setTextAreaParameters(JTextArea textArea,boolean isEnabled,boolean isOpaque,Font font,int tabSize) {
+            textArea.setTabSize(tabSize);
+            textArea.setEnabled(isEnabled);
+            textArea.setOpaque(isOpaque);
+            textArea.setFont(font);
+        }
+    private void addTextAreaToPanel(JTextArea textArea,JPanel panel,GridBagConstraints constraints,double weightx,int gridx,int gridy) {
+        constraints.weightx = weightx;
+        constraints.gridx = gridx;
+        constraints.gridy = gridy;
+        panel.add(new JScrollPane(textArea),constraints);
+    }
 
-        GridBagConstraints constraints = new GridBagConstraints();
+    private void locateAllFields(GridBagConstraints constraints,Color color,Font font) {
+        linerRadioButton = new JRadioButton(LINER_TYPE);
+        setRadioButtonParameters(linerRadioButton,true,true,color,font);
+        addRadioButtonToPanel(linerRadioButton,panel,constraints,0.0,1,0);
 
-        constraints.anchor = GridBagConstraints.CENTER;
-
-        Font font = new Font(FONT_STYLE,Font.ITALIC,FONT_SIZE);
-
-        setFont(font);
-
-        //Set Window Icon
-        Image image = new ImageIcon(Application.class.getResource("apple.png")).getImage();
-        setIconImage(image);
-
-
+        exponentialRadioButton = new JRadioButton(EXPONENTIAL_TYPE);
+        setRadioButtonParameters(exponentialRadioButton,true,true,color,font);
+        addRadioButtonToPanel(exponentialRadioButton,panel,constraints,0.0,3,0);
 
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(linerRadioButton);
         buttonGroup.add(exponentialRadioButton);
-        linerRadioButton = new JRadioButton(LINER_TYPE);
-        linerRadioButton.setFont(font);
-        linerRadioButton.setOpaque(false);
-        linerRadioButton.setForeground(Color.white);
-        constraints.weightx = 0.0;
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        panel.add(linerRadioButton,constraints);
-
-
-        exponentialRadioButton = new JRadioButton(EXPONENTIAL_TYPE);
-        exponentialRadioButton.setOpaque(false);
-        exponentialRadioButton.setForeground(Color.white);
-        exponentialRadioButton.setFont(font);
-        constraints.gridx = 3;
-        constraints.gridy = 0;
-        add(exponentialRadioButton,constraints);
-
-        constraints.ipadx = BUTTONS_WIDTH;
 
 
         firstElementTextField = new JTextField(FIRST_ELEMENT_TEXT);
-        firstElementTextField.setEnabled(false);
-        firstElementTextField.setOpaque(false);
-        firstElementTextField.setFont(font);
-        constraints.weightx = 0.0;
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        add(firstElementTextField,constraints);
+        setTextFieldParameters(firstElementTextField,false,false,font);
+        addTextFieldToPanel(firstElementTextField,panel,constraints,0.0,0,1);
 
         firstElementInput = new JTextField();
-        firstElementInput.setOpaque(true);
-        firstElementInput.setFont(font);
-        constraints.weightx = 0.0;
-        constraints.gridx = 1;
-        constraints.gridy = 1;
-        add(firstElementInput,constraints);
+        setTextFieldParameters(firstElementInput,true,true,font);
+        addTextFieldToPanel(firstElementInput,panel,constraints,0.0,1,1);
 
         coefficientTextField = new JTextField(COEFFICIENT_TEXT);
-        coefficientTextField.setEnabled(false);
-        coefficientTextField.setOpaque(false);
-        coefficientTextField.setFont(font);
-        constraints.weightx = 0.0;
-        constraints.gridx = 2;
-        constraints.gridy = 1;
-        add(coefficientTextField,constraints);
+        setTextFieldParameters(coefficientTextField,false,false,font);
+        addTextFieldToPanel(coefficientTextField,panel,constraints,0.0,2,1);
 
         coefficientInput = new JTextField();
-        coefficientInput.setOpaque(true);
-        coefficientInput.setFont(font);
-        constraints.weightx = 0.0;
-        constraints.gridx = 3;
-        constraints.gridy = 1;
-        add(coefficientInput,constraints);
+        setTextFieldParameters(coefficientInput,true,true,font);
+        addTextFieldToPanel(coefficientInput,panel,constraints,0.0,3,1);
 
         amountTextField = new JTextField(AMOUNT_TEXT);
-        amountTextField.setEnabled(false);
-        amountTextField.setOpaque(false);
-        amountTextField.setFont(font);
-        constraints.weightx = 0.0;
-        constraints.gridx = 0;
-        constraints.gridy = 2;
-        add(amountTextField,constraints);
+        setTextFieldParameters(amountTextField,false,false,font);
+        addTextFieldToPanel(amountTextField,panel,constraints,0.0,0,2);
 
         amountInput = new JTextField();
-        amountInput.setOpaque(true);
-        amountInput.setFont(font);
-        constraints.weightx = 0.0;
-        constraints.gridx = 1;
-        constraints.gridy = 2;
-        add(amountInput,constraints);
+        setTextFieldParameters(amountInput,true,true,font);
+        addTextFieldToPanel(amountInput,panel,constraints,0.0,1,2);
 
         fileToSaveTextField = new JTextField(FILE_TO_SAVE_TEXT);
-        fileToSaveTextField.setEnabled(false);
-        fileToSaveTextField.setOpaque(false);
-        fileToSaveTextField.setFont(font);
-        constraints.weightx = 0.0;
-        constraints.gridx = 2;
-        constraints.gridy = 2;
-        add(fileToSaveTextField,constraints);
+        setTextFieldParameters(fileToSaveTextField,false,false,font);
+        addTextFieldToPanel(fileToSaveTextField,panel,constraints,0.0,2,2);
 
         fileToSaveInput = new JTextField();
-        fileToSaveInput.setOpaque(true);
-        fileToSaveInput.setFont(font);
-        constraints.weightx = 0.0;
-        constraints.gridx = 3;
-        constraints.gridy = 2;
-        add(fileToSaveInput,constraints);
+        setTextFieldParameters(fileToSaveInput,true,true,font);
+        addTextFieldToPanel(fileToSaveInput,panel,constraints,0.0,3,2);
 
         constraints.ipadx = BIG_BUTTON_WIDTH;
         constraints.ipady = BIG_BUTTON_HEIGHT;
-
-
-        showSeries = new JTextField();
-        showSeries.setOpaque(true);
-        showSeries.setFont(font);
-        showSeries.setEditable(false);
-        constraints.weightx = 0.0;
-        constraints.gridx = 0;
-        constraints.gridy = 3;
         constraints.gridwidth = 4;
-        add(showSeries,constraints);
+
+        showSeries = new JTextArea();
+        setTextAreaParameters(showSeries,false,true,font,10);
+        addTextAreaToPanel(showSeries,panel,constraints,0.0,0,3);
+
 
         submitButton = new JButton(SUBMIT_TEXT);
-        submitButton.setFont(font);
-        constraints.weightx = 0.0;
-        constraints.gridx = 0;
-        constraints.gridy = 4;
-        constraints.gridwidth = 0;
-        add(submitButton,constraints);
+        addButtonToPanel(submitButton,panel,constraints,0,4,font);
+    }
+    Application() {
+        super();
+        setTitle(DEFAULT_CAPTION);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Screen Size
+        setScreenBounds();
+        setResizable(false);
+
+       // GraphicalPanel graphicalPanel = new GraphicalPanel();
+       // add(graphicalPanel);
+
+        panel = new JPanel();
+        add(panel);
+
+
+        GridBagLayout gridBagLayout = new GridBagLayout();
+
+        panel.setLayout(gridBagLayout);
+        GridBagConstraints constraints = new GridBagConstraints();
+
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.ipadx = BUTTONS_WIDTH;
+        constraints.ipady = BUTTONS_HEIGHT;
+
+        Font font = new Font(FONT_STYLE,Font.ITALIC,FONT_SIZE);
+        Color color = Color.blue;
+        setFont(font);
+
+        //Set Window Icon
+        Image image = new ImageIcon(Application.class.getResource(ICON_IMAGE)).getImage();
+        setIconImage(image);
+
+        locateAllFields(constraints,color,font);
 
 
         Application.ApplicationListener submitButtonAction = new Application.ApplicationListener();
-
         submitButton.addActionListener(submitButtonAction);
 
 
     }
     public class ApplicationListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            firstElement = Double.valueOf(0);
-            amount = Integer.valueOf(0);
-            coefficient = Double.valueOf(0);
-            filename = "";
             try {
-                firstElementInput.setEditable(true);
-                firstElementInput.setEnabled(true);
-
                 firstElement = Double.parseDouble(firstElementInput.getText());
-                System.out.println("????");
+                System.out.println(firstElement);
                 amount = Integer.parseInt(amountInput.getText());
                 coefficient = Double.parseDouble(coefficientInput.getText());
                 filename = fileToSaveInput.getText();
-                System.out.println(filename);
                 if(linerRadioButton.isSelected()) {
-                    series = new Liner(firstElement.intValue(),coefficient.intValue());
-                    System.out.println("1st");
+                    series = new Liner(firstElement.doubleValue(),coefficient.doubleValue());
                 }
                 else if(exponentialRadioButton.isSelected()) {
-                    series = new Exponential(firstElement.intValue(),coefficient.intValue());
-                    System.out.println("2st");
+                    series = new Exponential(firstElement.doubleValue(),coefficient.doubleValue());
                 }
                 else {
                     throw new MyException(MESSAGE_BOX_SOFT_TEXT);
                 }
             }
             catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null,MESSAGE_BOX_TEXT);
+                JOptionPane.showMessageDialog(null,
+                        MESSAGE_BOX_TEXT
+                                + "(first = "
+                                + EXAMPLE_FIRST_ELEMENT
+                                + "&&coef = "
+                                + EXAMPLE_COEFFICIENT
+                                + "&&amount = "
+                                + EXAMPLE_INDEX
+                                + "&&filename:"
+                                + EXAMPLE_FILENAME);
                 firstElement = EXAMPLE_FIRST_ELEMENT;
                 amount = EXAMPLE_INDEX;
                 coefficient = EXAMPLE_COEFFICIENT;
+                series = new Liner(firstElement.doubleValue(),coefficient.doubleValue());
                 filename = EXAMPLE_FILENAME;
-                series = new Liner(firstElement.intValue(),coefficient.intValue());
             }
             catch (MyException ex) {
                 JOptionPane.showMessageDialog(null,ex.getMessage());
-                series = new Liner(firstElement.intValue(),coefficient.intValue());
+                series = new Liner(firstElement.doubleValue(),coefficient.doubleValue());
             }
 
-            //outputText = series.toString();
+            try {
+                sum = series.sum(amount);
+                if(amount <= 0) throw new MyException(MESSAGE_BOX_AMOUNT_TEXT);
+            }
+            catch (MyException e1) {
+                JOptionPane.showMessageDialog(null,e1.getMessage());
+            }
 
-
-
+            outputText = series.toString();
+            try {
+                if(filename.length() == 0) {
+                    filename = EXAMPLE_FILENAME;
+                }
+                series.fileOutput(filename);
+            } catch (IOException e1) {
+                // Just Create This File
+            }
+            showSeries.setText(outputText);
         }
     }
 
