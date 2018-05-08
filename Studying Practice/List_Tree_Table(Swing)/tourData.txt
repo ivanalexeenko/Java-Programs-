@@ -1,0 +1,30 @@
+Greece
+FB,Krit,3 stars
+1064
+Cyprus
+AI,Ayia Napa,4 stars
+1304
+Spain
+FB,Costa-De-Barcelona,3 stars
+1406
+Bulgaria
+AI,Golden Sands,3 stars
+957
+Egypt
+AI,Sharm-el-Sheikh,4 stars
+1172
+Israel
+AI,Dead Sea,4 stars
+3346
+Italy
+FB,Sicillia,3 stars
+2008
+United Arab Emirates
+FB,Dubai,3 stars
+1928
+Portugal
+FB,Lisbon,3 stars
+2304
+Croatia
+AI(Light),Dubrovnick,3 stars
+1693

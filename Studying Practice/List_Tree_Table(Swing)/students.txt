@@ -1,0 +1,14 @@
+3 5 Quentin Jerome Tarantino
+2 4 Martin Charles Scorsese
+2 4 Steven Allan Spielberg
+1 2 David Keeth Lynch
+4 7 Alfred Joseph Hitchcock
+3 5 David Leo Fincher
+4 3 Francis Ford Coppola
+4 7 James Francis Cameron
+3 4 Christopher James Nolan
+2 3 Timothy Walter Burton
+3 2 Peter Robert Jackson
+4 3 George Walton Lucas
+2 4 Denis Jean Villeneuve
+1 5 Timur Nuruukhitovich Bekmambetov
